@@ -1,0 +1,12 @@
+.Header .img{
+    
+    width: 10%;
+    height: 10%;
+    margin-top: auto;
+    margin-bottom: auto;
+    position: relative;
+}
+.Header{
+    background: white;
+    position: relative;
+}

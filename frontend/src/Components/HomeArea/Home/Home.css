@@ -1,0 +1,33 @@
+.Home {
+ 
+}
+.Home >img{
+    height:300px;
+    width: 80%;
+    /* background-position: center; */
+    background-repeat: no-repeat;
+    /* background-size: cover; */
+    /* height: 30%; */
+    /* margin-left: 30%; */
+    /* object-fit: cover;
+    border:9px solid rgb(54, 144, 234); */
+  
+    
+}
+.Home > h2{
+     font-size: larger;
+   
+     font-style: italic; 
+    text-align: center;
+     color: rgb(50, 115, 115);
+    font-size: xxx-large;
+    font-family: 'Nothing You Could Do', cursive;
+/* font-family: 'Architects Daughter', cursive; */
+/* font-family: 'Montserrat', sans-serif;
+font-family: 'Poiret One', cursive;
+font-family: 'Poppins', sans-serif;
+font-family: 'Raleway', sans-serif; */
+
+
+
+}

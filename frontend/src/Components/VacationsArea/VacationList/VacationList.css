@@ -1,0 +1,25 @@
+.VacationList {
+    
+}
+.vacationsbuttons{
+  
+}
+SearchArea {display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 20px; }
+  
+.vacationcards{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 20px; 
+ }
+
+.VacationCard {
+  width: calc(25% - 10px);
+  margin-bottom: 20px;
+}
+.VacationCard:last-child {
+  margin: 0 auto; /* Center the last card in the bottom row */
+} 
