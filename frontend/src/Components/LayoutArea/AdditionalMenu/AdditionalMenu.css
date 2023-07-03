@@ -1,8 +1,11 @@
-.Footer {
+.AdditionalMenu > span{
     font-size: larger;
     font-style: italic; 
     text-align: center;
-    color: rgb(233, 41, 109);
+    color: rgb(118, 37, 65);
    font-size:medium;
     font-family: 'Nothing You Could Do', cursive;
+    display: flex;
+    flex-direction: column;
+    
 }

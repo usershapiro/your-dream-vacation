@@ -125,10 +125,7 @@ const defaultTheme = createTheme();
                 {...register("password",UserModel.passwordValidation)}
               />
              <span> {formState.errors.password?.message}</span><br/>
-              {/* <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              /> */}
+             
               <Button
                 type="submit"
                 fullWidth

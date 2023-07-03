@@ -30,7 +30,13 @@ function VacationCard(props: VacationCardProps): JSX.Element {
         alt={props.vacation.destination}
         src={appConfig.vacationImageUrl + props.vacation.imageFile}
         className="img"
-      /> <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: 'rgba(0, 0, 0, 0.5)', color: '#fff', fontSize: '24px', padding: '10px' }}>{props.vacation.destination}</span>
+      /> <span style={{ position: 'absolute',
+       top: '50%', left: '50%',
+        transform: 'translate(-50%, -50%)', 
+        background: 'rgba(0, 0, 0, 0.5)', 
+        color: '#fff',
+         fontSize: '24px', 
+         padding: '10px' }}>{props.vacation.destination}</span>
 
     </div>
   </CardActionArea>

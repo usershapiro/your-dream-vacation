@@ -25,14 +25,12 @@ function Header(): JSX.Element {
         // paddingBottom: theme.spacing(2),
         // Override media queries injected by theme.mixins.toolbar
         '@media all': {
-          minHeight: 128,
+          minHeight: 100,
         },
       }));
     
-function addVacation(){
-  
-  
-  navigate("/add")
+function addMenue(){
+  navigate("/additionalMenu")
 }
 
 
@@ -48,7 +46,7 @@ function addVacation(){
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
-            onClick={addVacation}
+            onClick={addMenue}
           >
         
             <MenuIcon />
@@ -59,14 +57,9 @@ function addVacation(){
             component="div"
             sx={{ flexGrow: 1, alignSelf: 'flex-end' }}
           >
-            
             <img className="img" src={logo} ></img> 
             <HandleAuth/>
           </Typography>
-         
-          <IconButton size="large" aria-label="search" color="inherit">
-            <SearchIcon />
-          </IconButton>
           <IconButton
             size="large"
             aria-label="display more actions"
@@ -79,8 +72,7 @@ function addVacation(){
       </AppBar>
 
     </Box>
-{/*     
-    <img className="img" src={logo} ></img> */}
+
    
 		  
         </div>
