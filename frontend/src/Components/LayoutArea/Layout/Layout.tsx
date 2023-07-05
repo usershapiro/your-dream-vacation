@@ -13,10 +13,6 @@ function Layout(): JSX.Element {
     <Header/>
     </header>
 
-    {/* <aside>
-    <Menu/>
-    </aside> */}
-
     <main>
     <Routing/>  
     </main>

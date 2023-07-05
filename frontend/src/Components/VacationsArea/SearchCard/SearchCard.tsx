@@ -33,6 +33,7 @@ function SearchCard(props: VacationCardProps): JSX.Element {
 
 </Card>
 </NavLink>  
+
         </div>
     );
 }

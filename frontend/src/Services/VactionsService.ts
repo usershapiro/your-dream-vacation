@@ -43,10 +43,10 @@ class VacationsService  {
     }
     
 
-    public async update(vacation:VacationsModel):Promise<void>{
+    public async update(vacation:VacationsModel):Promise<VacationsModel>{
         
         const myForm = new FormData()
-        
+        myForm.append("vacationCode",vacation.vacationCode.toString());
         myForm.append("destination", vacation.destination);
         myForm.append("description", vacation.description);
         myForm.append("startDate", vacation.startDate);
@@ -59,23 +59,12 @@ class VacationsService  {
         const response = await axios.put<VacationsModel>(appConfig.vacationsUrl+ vacation.vacationCode ,myForm)
         const updatedVacation = response.data
         console.log("updatedVacation"+ updatedVacation)
-        
-    }
-    
-   
-
-
-    public async addFollower(id:number,vacationCode:number):Promise<void>{
-         await axios.post<FollowerModel>(appConfig.addFollowUrl +id +vacationCode );
-        
+        return updatedVacation
     }
 
-
-
-    // public async deleteProduct(productId:number):Promise<void>{
-    //      await axios.delete(appConfig.deleteProduct + productId);
-    // }
-
+    public async deleteVacation(vacationCode:number):Promise<void> {
+        await axios.delete(appConfig.vacationsUrl+vacationCode)
+    }
 
 }
 const vacationsService = new VacationsService()

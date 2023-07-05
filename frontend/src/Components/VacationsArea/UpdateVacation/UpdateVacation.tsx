@@ -6,12 +6,11 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import vacationsService from "../../../Services/VactionsService";
 import appConfig from "../../../Utils/appConfig";
+import notifyService from "../../../Services/NotifyService";
 
 function UpdateVacation(): JSX.Element {
    
-    const {handleSubmit , register, formState ,setValue} = useForm <VacationsModel>();
-    const [selectedImage, setSelectedImage] = useState();
-    
+    const {handleSubmit , register, formState ,setValue} = useForm <VacationsModel>();    
     const [vacation, setVacation] = useState<VacationsModel>()
     const navigate = useNavigate();
     const params = useParams();
@@ -20,38 +19,52 @@ function UpdateVacation(): JSX.Element {
   useEffect(()=>{
     const vacationCode = + params.vacationCode
     vacationsService.getVacationByCode(vacationCode)
-    .then(vacation => {
-      setValue("vacationCode", vacation.vacationCode);
-      setValue("destination", vacation.destination);
-      setValue("description", vacation.description);
-      // setValue("startDate", vacation.startDate);
-      // setValue("endDate", vacation.endDate);
-      // setValue("price", vacation.price);
-      // setValue("imageFile", vacation.imageFile);
-      setVacation(vacation)
+    .then(v => {
+      setVacation(v)
+      setValue("vacationCode", v.vacationCode);
+      setValue("destination", v.destination);
+      setValue("description", v.description);
+      setValue("startDate", v.startDate);
+      setValue("endDate", v.endDate);
+      setValue("price", v.price);
+      setValue("imageFile", v.imageFile);
+      setVacation(v)
       console.log(vacationCode)
   })
-  .catch(err => alert(err.message));
+  .catch(err => notifyService.error(err));
   },[])
     
 
   
-    async function update() {
+    async function update(vacation:VacationsModel) {
+      const currentDate = new Date();
+      const startDate = new Date(vacation.startDate);
+      const endDate = new Date(vacation.endDate);
+  
+      if (endDate < startDate) {
+        notifyService.error("End date cannot be earlier than the start date.");
+        return;
+      }
+  
+      if (currentDate > endDate) {
+        const confirmed = window.confirm(
+          "The selected end date is in the past. Are you sure you want to proceed?"
+        );
+        if (!confirmed) {
+          return;
+        }
+      }
         try {
-            console.log(vacation)
+            
             await vacationsService.update(vacation)
-            alert("vacation has been updated")
+            notifyService.success("Vacation has been updated")          
             navigate("/vacations");
         }
         catch(err: any) {
-            alert(err.message);
+           notifyService.error(err)
         }
     }
-    // const imageChange = (e:any) => {
-    //   if (e.target.files && e.target.files.length > 0) {
-    //     setSelectedImage(e.target.files[0]);
-    //   }
-    // };
+  
 
     return (
         <div className="UpdateVacation">
@@ -116,16 +129,11 @@ function UpdateVacation(): JSX.Element {
        />
        <span className="Error">{formState.errors.price?.message}</span>
        </div>
+       {vacation && vacation.imageFile!== null &&<>
        <label>Image: </label>
-                <img src={vacation && appConfig.vacationImageUrl + vacation?.imageFile}/>
-                <input type="file" accept="image/*"  defaultValue={vacation?.imageFile} {...register("image")} />
+                {/* <img src={vacation && appConfig.vacationImageUrl + vacation?.imageFile}/> */}
+                <input type="file" accept="image/*"   {...register("image")} /></>}
 
-       {/* <input
-            type="file"        
-            accept="image/*"
-             {...register("image")}
-         
-          /> */}
        <Box sx={{ '& button': { m: 1 } }}>
       
       <div>

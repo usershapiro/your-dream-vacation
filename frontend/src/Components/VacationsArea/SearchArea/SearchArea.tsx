@@ -1,112 +1,121 @@
-import { Box, Button, Checkbox, IconButton, Stack, TextField } from "@mui/material";
+import { Stack, Button } from "@mui/material";
 import "./SearchArea.css";
-import { Favorite, FavoriteBorder, Rowing, Search } from "@mui/icons-material";
 import VacationsModel from "../../../Models/VacationModel";
-import VacationCard from "../VacationCard/VacationCard";
 import SearchCard from "../SearchCard/SearchCard";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import followerService from "../../../Services/followerService";
 import vacationsService from "../../../Services/VactionsService";
 import { authStore } from "../../../Redux/AuthState";
 import UserModel from "../../../Models/Users";
+import notifyService from "../../../Services/NotifyService";
 
-interface VacationSearchProps{
-    vacations: VacationsModel[];
-  }
-  
-  
+interface VacationSearchProps {
+  vacations: VacationsModel[];
+}
 
-function SearchArea(props:VacationSearchProps): JSX.Element {
-  // const [currentVacations,setCurrentVacations]= useState<VacationsModel[]>([]);
-  // const [futureVacations , setFutureVacations]= useState<VacationsModel[]>([]);
-  // const [followedVacations , setFollowedVacations]= useState<VacationsModel[]>([]);
+function SearchArea(props: VacationSearchProps): JSX.Element {
   const [filterVacations, setFilterVacations] = useState<VacationsModel[]>([]);
   const [user, setUser] = useState<UserModel>();
-  const updatedVacations: VacationsModel[] = [];
+  const [isButtonClicked, setIsButtonClicked] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-
     setUser(authStore.getState().user);
     const unsubscribe = authStore.subscribe(() => {
-        // Take current user when there is a change:
-        setUser(authStore.getState().user);
+      setUser(authStore.getState().user);
     });
 
     return () => {
-        // Unsubscribe: 
-        unsubscribe();
+      unsubscribe();
     };
-}, []);
+  }, []);
 
-    function CurrentVacations():VacationsModel[]{
-    
-      props.vacations.forEach((v) => {
-        const today = new Date();
-        const startDate = new Date(v.startDate);
-        const endDate = new Date(v.endDate);
-    
-        if (today.getTime() >= startDate.getTime() && today.getTime() <= endDate.getTime()) {
-          updatedVacations.push(v);
-        }   
-         
-        setFilterVacations(updatedVacations)
-      }); 
-      
-      return filterVacations; 
-      
-    }
+  function CurrentVacations(): void {
+    const updatedVacations: VacationsModel[] = [];
 
-    function FutureVacations():VacationsModel[]{
-
-      props.vacations.forEach((v) => {
+    props.vacations.forEach((v) => {
       const today = new Date();
       const startDate = new Date(v.startDate);
-      
-      if (today.getTime() < startDate.getTime()) {
-        updatedVacations.push(v);
-      }  
+      const endDate = new Date(v.endDate);
 
-      setFilterVacations(updatedVacations)
-    }); 
-        
-  
-      return filterVacations
-    }
-    
-    
- async  function FollowedVacations() : Promise <VacationsModel[]> {
-    await vacationsService.getvacationForUser(user.id)
-  
-    .then((filterVacations) => {setFilterVacations(filterVacations)
-    
-    })
-    .catch(err => alert(err));
-   
-    // return followedVacations
-    return filterVacations
+      if (today.getTime() >= startDate.getTime() && today.getTime() <= endDate.getTime()) {
+        updatedVacations.push(v);
+      }
+    });
+
+    setFilterVacations(updatedVacations);
+    setIsButtonClicked(true);
   }
 
-    return (
-        
-        <div className="SearchArea">
-      <Stack direction="row" spacing={2} >
-      <Button size="small" color="secondary" onClick={FollowedVacations}>My Vacations</Button>
-      <Button size="small" color="secondary" onClick={CurrentVacations} >Current Vacations</Button>
-      <Button size="small" color="secondary" onClick={FutureVacations}>Future Vacations</Button>
-  
-      </Stack>
-      
-      
-        <Stack direction="row" spacing={2}>
-          {filterVacations.map((v) => <SearchCard key={v.vacationCode} vacation={v} />)} 
-        
-        </Stack>
+  function FutureVacations(): void {
+    const updatedVacations: VacationsModel[] = [];
 
-  
-        </div>
-    );
+    props.vacations.forEach((v) => {
+      const today = new Date();
+      const startDate = new Date(v.startDate);
+
+      if (today.getTime() < startDate.getTime()) {
+        updatedVacations.push(v);
+      }
+    });
+
+    setFilterVacations(updatedVacations);
+    setIsButtonClicked(true);
+  }
+
+  async function FollowedVacations(): Promise<void> {
+    try {
+      const followedVacations = await vacationsService.getvacationForUser(user.id);
+      setFilterVacations(followedVacations);
+      setIsButtonClicked(true);
+    } catch (err) {
+      notifyService.error(err);
+    }
+  }
+  const isUser = user?.role === "user"
+  const isAdmin = user?.role === "admin"
+  return (
+    <div className="SearchArea">
+      <div className="container">
+      {isUser && (
+            <Stack direction="row" spacing={2}>
+            <Button size="small" color="secondary" onClick={FollowedVacations}>
+              My Vacations
+            </Button>
+            <Button size="small" color="secondary" onClick={CurrentVacations}>
+              Current Vacations
+            </Button>
+            <Button size="small" color="secondary" onClick={FutureVacations}>
+              Future Vacations
+            </Button>
+          </Stack>
+          )}
+           {isAdmin && (
+            <Stack direction="row" spacing={2}>
+            
+            <NavLink to={"/add" }><span className="material-symbols-outlined">add</span></NavLink>
+            <NavLink to={"/informationChart"}><span className="material-symbols-outlined">monitoring</span> </NavLink>   
+            
+          </Stack>
+          )}
+        
+        <Stack direction="row" spacing={2}>
+        <div className="vacationcards">  
+          {filterVacations.map((v) => (
+            <SearchCard   key={v.vacationCode} vacation={v}  />
+          ))}
+          </div>
+        </Stack>
+      </div>
+
+      {isButtonClicked && (
+        <>
+          <h1>You are welcome to explore all of our unique and beautiful vacations!</h1>
+          <h2>We have more dreams for you!</h2>
+        </>
+      )}
+    </div>
+  );
 }
 
 export default SearchArea;

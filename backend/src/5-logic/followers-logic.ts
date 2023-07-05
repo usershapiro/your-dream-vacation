@@ -39,22 +39,26 @@ async function getFollowersNumberPerVacation(vacationCode:number) :Promise<numbe
 
 }
 
-async function getFollowersByVacation(vacationCode:number) {
-    const sql = `
-    SELECT  * 
-      FROM followers;
-     `;
+async function getFolowersNumbersForAllVacations() {
+    // const sql = ` SELECT vacationCode, COUNT(id) AS count FROM followers GROUP BY vacationCode;`;
+    const sql = `SELECT v.vacationCode, v.destination, COUNT(f.id) AS count
+    FROM followers f
+    INNER JOIN vacations v ON f.vacationCode = v.vacationCode
+    GROUP BY v.vacationCode, v.destination;`
     const followers = await dal.execute(sql);
-    
+    console.log(followers)
     return followers;
 }
+
+
 
 
 export default 
 {
     addFollwoer,
-    getFollowersByVacation,
     getFollowersNumberPerVacation,
-    removeFollower
+    removeFollower,
+    getFolowersNumbersForAllVacations
+    
     
 };

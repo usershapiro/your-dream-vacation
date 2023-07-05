@@ -20,6 +20,7 @@ import { send } from "process";
 import { NavLink, useNavigate } from "react-router-dom";
 import CredentialsModel from "../../../Models/CredentialsModel";
 import authService from "../../../Services/AuthService";
+import notifyService from "../../../Services/NotifyService";
 
 
 function Login(): JSX.Element {
@@ -31,13 +32,13 @@ function Login(): JSX.Element {
       async function send(credentials:CredentialsModel) {
         try {
             await authService.login(credentials);
-            // notifyService.success("Welcome!");
-            alert("welcome back! ")
+                
+            notifyService.success("Welcome Back!");
             navigate("/vacations");
         }
         catch(err: any) {
-            // notifyService.error(err);
-            alert(err)
+            notifyService.error(err);
+            
         }
     }
 
@@ -66,12 +67,20 @@ function Login(): JSX.Element {
               <Grid item xs={12}>
                 <TextField
                   required
+                  
                   fullWidth
                   id="email"
                   label="Email Address"
+                  type="email"
                   name="email"
                   autoComplete="email"
-                  {...register("email",UserModel.emailValidation)}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^\S+@\S+$/i,
+                      message: "Please enter a valid email address",
+                    },
+                  })}
                 />{formState.errors.email?.message}
               </Grid>
               <Grid item xs={12}>

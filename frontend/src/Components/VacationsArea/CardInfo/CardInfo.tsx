@@ -11,10 +11,12 @@ import followerService from "../../../Services/followerService";
 import { authStore } from "../../../Redux/AuthState";
 import UserModel from "../../../Models/Users";
 import FollowerModel from "../../../Models/FollowerModel";
+import notifyService from "../../../Services/NotifyService";
 
 function CardInfo(): JSX.Element {
     const params = useParams();
     const [user, setUser] = useState<UserModel>();
+    const [isFollowung,setisFollowing]=useState<boolean>();
     const [vacation, setVacation] = useState<VacationsModel>();
     const [ vacations ,setVacations ] = useState<VacationsModel[]>([]);
     const [value, setValue] = React.useState<number | null>(3);
@@ -22,16 +24,19 @@ function CardInfo(): JSX.Element {
     const [hasAddedFollower, setHasAddedFollower] = useState(false);
     const [followersCount, setFollowersCount] = useState<number>();
     const [checked, setChecked] = React.useState(true);
-    
+
+    //getting the vacations
     useEffect(() => {
         const vacationCode = + params.vacationCode; // prodId must be same name as declared in the routing! 
         vacationsService.getVacationByCode(vacationCode)
+
             .then((vacation) => {setVacation(vacation)
             
             })
             .catch(err => alert(err));
     }, []);
    
+    //setting the user from redux
     useEffect(() => {
 
         setUser(authStore.getState().user);
@@ -46,23 +51,23 @@ function CardInfo(): JSX.Element {
         };
     }, []);
 
+ //getting followers number per vacation
     useEffect(() => {
       const vacationCode = + params.vacationCode;
       followerService.followersNumberPerVacation(vacationCode)
           .then((followersCount) => setFollowersCount(followersCount))
-          .catch(err => alert(err));
+          .catch(err => notifyService.error(err));
           console.log(vacations)
   }, []);
  
-  
+  //adding follower
  async function addFollower(){
   // if (checked) {
     try {
       // if (!hasAddedFollower) {
         await followerService.addFollower(user.id, vacation.vacationCode);
         setFollowersCount(followersCount + 1);
-        console.log("count after add " + followersCount)
-       
+        
         // setHasAddedFollower(true);
       // }
     } catch (err: any) {
@@ -77,12 +82,12 @@ function CardInfo(): JSX.Element {
       //     // if (hasAddedFollower) {
             await followerService.removeFollower(user.id, vacation.vacationCode);
             setFollowersCount(followersCount - 1);
-            console.log("count after remove  "+ followersCount)
+          
       
       //       // setHasAddedFollower(false);
       //     // }
         } catch (err: any) {
-          alert(err.message);
+          notifyService.error(err)
         }
   }
 
@@ -92,19 +97,23 @@ function CardInfo(): JSX.Element {
          {vacation && 
          <>
          <div className="container">
-         {/* <CardMedia
+         <CardMedia
         component="img"
-        height="350"
+        height="250"
         src={appConfig.vacationImageUrl + vacation.imageFile}
         alt={vacation.destination}
         className="img"/>
-             */}
+            
 		<Card sx={{ maxWidth: 800 }}
     className="card">
         
      <CardContent className="info" > 
       <div>
-      <Checkbox 
+
+        
+      {user.role === "user" && (
+  <>
+   <Checkbox 
       onChange={(e) => {
         if (e.target.checked) {
           addFollower();
@@ -112,7 +121,7 @@ function CardInfo(): JSX.Element {
         else{
           removeFollower();
         }
-       
+      
       }}
       
        color="secondary"{...label} 
@@ -121,6 +130,10 @@ function CardInfo(): JSX.Element {
        checkedIcon={<Favorite />}
        />
        <span>Like {followersCount}</span>
+  
+  </>
+)}
+     
     </div>
             <h1>{vacation.destination}</h1>
           <Typography gutterBottom variant="h5" className="description" component="div">
@@ -147,24 +160,28 @@ function CardInfo(): JSX.Element {
 
           </Typography>
         </CardContent>
-        <NavLink to={"/vacations"}>Back</NavLink><br></br>
+        <NavLink to={"/vacations"}><span className="material-symbols-outlined">
+redo
+</span></NavLink><br></br>
       
         {user.role === "admin" && (
   <>
   
-    <NavLink to={"/update/" + vacation.vacationCode}>Update</NavLink><br></br>
-    <NavLink to={"/add" }> Add </NavLink>
+    <NavLink to={"/update/" + vacation.vacationCode}>
+      <span className="material-symbols-outlined">
+      ink_pen
+    </span></NavLink>
+   
+    <NavLink to={"/delete/" + vacation.vacationCode}>
+     <span className="material-symbols-outlined">
+     delete
+     </span></NavLink>
   </>
 )}
     </Card>	
-   
     </div>
-     
          </>
          }
-
-      
-        
         </div>
     );
 }

@@ -59,5 +59,8 @@ h1{
     font-size: larger;
     font-style: italic;
   }
-  
+  .CardInfo .material-symbols-outlined{
+    height: 50px;
+    font-size: x-large !important;
+  }
   

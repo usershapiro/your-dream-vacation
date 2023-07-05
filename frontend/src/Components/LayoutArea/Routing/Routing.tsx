@@ -12,6 +12,8 @@ import SearchArea from "../../VacationsArea/SearchArea/SearchArea";
 import SearchCard from "../../VacationsArea/SearchCard/SearchCard";
 import VacationsModel from "../../../Models/VacationModel";
 import AdditionalMenu from "../AdditionalMenu/AdditionalMenu";
+import DeleteVacation from "../../VacationsArea/DeleteVacation/DeleteVacation";
+import InformationChart from "../../VacationsArea/InformationChart/InformationChart";
 
 function Routing(): JSX.Element {
     return (
@@ -22,9 +24,10 @@ function Routing(): JSX.Element {
                <Route path="/logout" element={<Logout/>} />
                <Route path="/register" element={<Register/>} />
                <Route path="/vacations" element={<VacationList />} />
-               <Route path="/search" element={<SearchArea vacations={[]}  />} />
                <Route path="/add" element={<AddVacation/>} />
+               <Route path="/delete/:vacationCode" element={<DeleteVacation/>} />
                <Route path="/update/:vacationCode" element={<UpdateVacation/>} />
+               <Route path="/informationChart" element={<InformationChart/>} />
                <Route path= "/additionalMenu" element={<AdditionalMenu/>} />
               
                <Route path="/" element={<Navigate to="/home" />} />

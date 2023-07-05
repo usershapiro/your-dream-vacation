@@ -57,21 +57,20 @@ const salt = "MakeThingsGoRight"
     return hashedText
 }
 
-function isAdmin(user:UserModel):Promise<boolean>{
-    return new Promise<boolean>((resolve, reject) => {      
-    try{
-        const role = user.role
-        if (role==="user")
-        resolve(false)
-        return;
-    } 
-     catch (err: any) {
-        reject(err);
-    }
-       
-}) 
-}
+async function isAdmin(request: Request): Promise<boolean> {
+  
 
+    const header = request.header("authorization");
+    const token = header.substring(7);
+
+    // Extract container from token:
+    const container: any = jwt.decode(token);
+
+    // Extract user: 
+    const user: UserModel = container.user;
+
+    return user.role === "admin"
+}
 export default {
     getNewToken,
     verifyToken,

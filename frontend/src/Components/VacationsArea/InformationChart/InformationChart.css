@@ -1,0 +1,11 @@
+.InformationChart {
+	
+}
+
+
+.chart-container {
+    width: 1200px;   /* Adjust the width as per your requirement */
+    height: 600px;  /* Adjust the height as per your requirement */
+    margin-right: auto;
+    margin-left: auto;
+  }

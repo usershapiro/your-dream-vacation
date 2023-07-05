@@ -9,6 +9,7 @@ import path from "path";
 
 const router = express.Router();
 
+//get all vacations
 router.get("/vacations", 
  [blockNonLoggedIn],
  async (request: Request, response: Response, next: NextFunction) => {
@@ -21,6 +22,7 @@ router.get("/vacations",
     }
 });
 
+//get vacation by code
 router.get("/vacations-by-code/:vacationCode", 
 
  async (request: Request, response: Response, next: NextFunction) => {
@@ -33,9 +35,10 @@ router.get("/vacations-by-code/:vacationCode",
         next(err);
     }
 });
+
 //add vacation
 router.post("/vacations",
-// [blockNonAdmin],
+[blockNonAdmin],
 async(request: Request, response: Response, next: NextFunction)=>{
   try{
 
@@ -65,7 +68,7 @@ router.get("/vacations/images/:imageFile", async (request: Request, response: Re
 
 
 //update vacation
-router.put("/vacations/:vacationCode([0-9]+)",  async(request: Request, response: Response,next: NextFunction)=>{
+router.put("/vacations/:vacationCode([0-9]+)" ,async(request: Request, response: Response,next: NextFunction)=>{
   try{
       request.body.image = request.files?.image
       request.body.vacationCode = +request.params.vacationCode
@@ -79,7 +82,7 @@ router.put("/vacations/:vacationCode([0-9]+)",  async(request: Request, response
   }
 })
 
-//getvacationforuser
+//get vacation for user
 router.get("/getVacationsForUser/:id([0-9]+)",  async(request: Request, response: Response,next: NextFunction)=>{
   try{
     
@@ -89,9 +92,21 @@ router.get("/getVacationsForUser/:id([0-9]+)",  async(request: Request, response
 }catch(err:any){
     next(err)
 }
-
-
 })
 
+
+//delete vacation
+router.delete("/vacations/:vacationCode", [blockNonLoggedIn],async(request:Request , response:Response , next:NextFunction)=>{
+  try{
+    const vacationCode = +(request.params.vacationCode);
+
+       await vacationsLogic.deleteVacation(vacationCode)
+       response.json(204)
+       
+  }
+  catch(err:any){
+     next(err)
+  }
+ })
 
 export default router;

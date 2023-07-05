@@ -86,22 +86,23 @@ async function updateVacation (vacation: VacationsModel) :Promise<VacationsModel
    const errors = vacation.validate();
    if(errors) throw new ValidationError(errors);
 
-    const desiredVacation = await getVacationByCode(vacation.vacationCode)
-
     if(vacation.image){
-        const imagePath = "./src/1-assets/images/" + desiredVacation.imageFile
-        //delet image from file 
-        fs.unlinkSync(imagePath)
-        //extracts the extension and add it to extention
-        const extention = path.extname(vacation.image.name)
-        //generates name
-        vacation.imageFile = uuid() + extention
-        //transfers the image to the path
-        await vacation.image.mv("./src/1-assets/images/" +vacation.imageFile )
-        delete vacation.image
+        const error = vacation.validate()
 
-    }else if (!vacation.image) {
-        vacation.imageFile = desiredVacation.imageFile
+        if (error) throw new ValidationError(error)
+    
+      
+        
+        if (vacation.image) {
+
+            deleteImage(vacation);
+            
+            saveImage(vacation);
+            
+            delete vacation.image;
+
+    }else  {
+        vacation.imageFile = vacation.imageFile
     }
 
     const sql =`
@@ -129,7 +130,7 @@ async function updateVacation (vacation: VacationsModel) :Promise<VacationsModel
     if(updateVacationInfo.length === 0) throw new ResourceNotFoundError(vacation.vacationCode)
     
     return vacation
-}  
+}  }
 
 
 
@@ -148,14 +149,34 @@ const vacations = await dal.execute(sql , [id])
    return vacations
 }
 
-// SELECT DISTINCT
-// 		V.*,
-// 		EXISTS(SELECT * FROM followers WHERE vacationId = F.vacationId AND userId = ${userId}) AS isFollowing,
-// 		COUNT(F.userId) AS followersCount
-// 	FROM vacations AS V LEFT JOIN followers AS F
-// 	ON V.vacationId = F.vacationId
-// 	GROUP BY vacationId
-// 	ORDER BY startDate DESC
+async function deleteVacation(vacationCode: number): Promise<void>{
+    const sql = `DELETE FROM vacations
+     WHERE vacationCode = ?`
+    const info:OkPacket =await dal.execute(sql,[vacationCode])
+    if(info.affectedRows ===0) throw new ResourceNotFoundError(vacationCode)
+
+}
+
+// Images path
+const imagesPath = path.join(__dirname, '..', '1-assets', 'images');
+
+// Delete existing image
+function deleteImage(vacation: VacationsModel) {
+    if (fs.existsSync("./src/1-assets/images/" + vacation.imageFile)) {
+
+        // Delete it:
+        fs.unlinkSync("./src/1-assets/images/" + vacation.imageFile);
+    }
+};
+
+// Save new image in file system
+async function saveImage(vacation: VacationsModel): Promise<void> {
+    const extension = vacation.image.name.substring(vacation.image.name.lastIndexOf('.'));
+    vacation.imageFile = uuid() + extension;
+    const image = path.join(imagesPath, vacation.imageFile);
+    await vacation.image.mv(image);
+};
+
 
 
 export default {
@@ -163,5 +184,6 @@ export default {
     getVacationByCode,
     addVaction,
     updateVacation,
-    getVacationsForUser
-};
+    getVacationsForUser, 
+    deleteVacation
+}

@@ -1,4 +1,5 @@
 class VacationsModel {
+    [x: string]: any;
     
     public vacationCode: number;
     public destination: string;

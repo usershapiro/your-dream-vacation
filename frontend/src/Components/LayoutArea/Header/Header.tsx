@@ -30,7 +30,7 @@ function Header(): JSX.Element {
       }));
     
 function addMenue(){
-  navigate("/additionalMenu")
+  navigate("/informationChart")
 }
 
 
@@ -48,9 +48,10 @@ function addMenue(){
             sx={{ mr: 2 }}
             onClick={addMenue}
           >
-        
             <MenuIcon />
           </IconButton>
+          <NavLink to={"/home"}>Home</NavLink>
+        
           <Typography
             variant="h5"
             noWrap
@@ -58,8 +59,9 @@ function addMenue(){
             sx={{ flexGrow: 1, alignSelf: 'flex-end' }}
           >
             <img className="img" src={logo} ></img> 
-            <HandleAuth/>
+         
           </Typography>
+          <HandleAuth/>
           <IconButton
             size="large"
             aria-label="display more actions"

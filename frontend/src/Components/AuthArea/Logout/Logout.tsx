@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./Logout.css";
 import { useEffect } from "react";
 import authService from "../../../Services/AuthService";
+import notifyService from "../../../Services/NotifyService";
 
 
 
@@ -13,10 +14,11 @@ function Logout(): JSX.Element {
        useEffect(() => {
 
         authService.logout()
-        .then(()=>{   alert("Bye Bye")
+        .then(()=>{   
+        notifyService.success("Bye Bye");
                       navigate("/login")
     })
-        .catch((err: any)=>{console.log(err)})
+        .catch((err: any)=>{notifyService.error(err)})
           
     });
 

@@ -20,7 +20,8 @@ router.post("/followers/:id/:vacationcode", async (request: Request, response: R
     next(err);
   }
 });
-//count vacation's followers
+
+//count per vacation's followers
 router.get("/followersNumber/:vacationCode" ,async(request: Request, response: Response, next: NextFunction) => {
     const vacationCode = +request.params.vacationCode
     const followersNumber =  await followersLogic.getFollowersNumberPerVacation(vacationCode)
@@ -46,16 +47,17 @@ router.delete("/removeFollower/:id/:vacationCode",async(request:Request , respon
      next(err)
   }
  })
-// router.get("/followers", 
-// //  [blockNonLoggedIn],
-//  async (request: Request, response: Response, next: NextFunction) => {
-//     try {
-//         const followers = await followersLogic.getFollowersByVacation(vacationCode);
-//         response.json(followers);
-//     }
-//     catch (err: any) {
-//         next(err);
-//     }
-// });
+
+ //getting followers numbers for all vacations
+router.get("/followersForAllVacations", 
+ async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const followers = await followersLogic.getFolowersNumbersForAllVacations()
+        response.json(followers);
+    }
+    catch (err: any) {
+        next(err);
+    }
+});
 
 export default router;

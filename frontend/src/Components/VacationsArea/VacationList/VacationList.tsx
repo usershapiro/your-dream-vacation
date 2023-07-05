@@ -9,6 +9,7 @@ import { authStore } from "../../../Redux/AuthState";
 import { useNavigate } from "react-router-dom";
 import useVerifyLoggedIn from "../../../Utils/useVerifyloggedin";
 import SearchArea from "../SearchArea/SearchArea";
+import notifyService from "../../../Services/NotifyService";
 
 
 
@@ -23,7 +24,7 @@ function VacationList(): JSX.Element {
   useEffect(()=>{
     vacationsService.getAllVacations()
     .then( vacations => setVecations(vacations))
-    .catch(err=> alert(err))
+    .catch(err=> notifyService.error(err))
   },[])
  
   // Calculate pagination data
@@ -42,7 +43,7 @@ function VacationList(): JSX.Element {
     <div className="VacationList">
        <div className="vacationsbuttons">
        <SearchArea   vacations={vacations} />
-
+           
        </div>
        
        <div className="vacationcards">     

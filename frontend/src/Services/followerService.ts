@@ -1,6 +1,7 @@
 import axios from "axios";
 import FollowerModel from "../Models/FollowerModel";
 import appConfig from "../Utils/appConfig";
+import { Console } from "console";
 
 class FollowerService {
 
@@ -18,6 +19,13 @@ class FollowerService {
         console.log("followersNumber  "+followersNumber)
         
          return followersNumber
+    }
+
+    public async followersnumbersForAllVactions() {
+        const response = await axios.get(appConfig.getFolowersNumberForAllVacations)
+        const followersForAllVacations = response.data;
+        console.log(followersForAllVacations);
+        return followersForAllVacations;
     }
 
     public async removeFollower(id:number,vacationCode:number):Promise<void> {

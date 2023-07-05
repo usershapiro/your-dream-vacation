@@ -9,4 +9,14 @@
 .Header{
     background: white;
     position: relative;
+    font-size:xx-large;
+    font-style: italic; 
+    text-align: center;
+    color: rgb(233, 41, 109);
+   font-size:x-large;
+    font-family: 'Nothing You Could Do', cursive;
+}
+.img{
+    margin-left: auto;
+    margin-right: auto;
 }

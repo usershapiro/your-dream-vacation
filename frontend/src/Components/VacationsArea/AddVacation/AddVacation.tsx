@@ -6,6 +6,7 @@ import VacationsModel from "../../../Models/VacationModel";
 import vacationsService from "../../../Services/VactionsService";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import notifyService from "../../../Services/NotifyService";
 
 function AddVacation(): JSX.Element {
   
@@ -13,23 +14,32 @@ function AddVacation(): JSX.Element {
     const [selectedImage, setSelectedImage] = useState();
     const navigate = useNavigate();
 
-    // const imageChange = (e:any) => {
-    //   if (e.target.files && e.target.files.length > 0) {
-    //     setSelectedImage(e.target.files.value[0]);
-    //   }
-    // };
-
-    
-  
+ 
     async function send(vacation:VacationsModel) {
+      const currentDate = new Date();
+      const startDate = new Date(vacation.startDate);
+      const endDate = new Date(vacation.endDate);
+  
+      if (endDate < startDate) {
+        notifyService.error("End date cannot be earlier than the start date.");
+     
+        return;
+      }
+  
+      if (currentDate > startDate || currentDate > endDate) {
+        notifyService.error("Please select future dates.");
+      
+        return;
+      }
         try {
             console.log(vacation)
             await vacationsService.addVacation(vacation)
-            alert("vacation has been added")
+            notifyService.success("vacation has been added ")
+        
             navigate("/vacations");
         }
         catch(err: any) {
-            alert(err.message);
+            notifyService.error(err)
         }
     }
     return (
@@ -120,3 +130,7 @@ function AddVacation(): JSX.Element {
 }
 
 export default AddVacation;
+function setValue(arg0: string, arg1: string) {
+  throw new Error("Function not implemented.");
+}
+

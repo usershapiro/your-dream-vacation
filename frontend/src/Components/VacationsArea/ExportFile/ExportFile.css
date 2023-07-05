@@ -1,0 +1,9 @@
+.ExportFile button{
+	color: purple;
+    background-color: lightblue;
+    width: 250px;
+    border-radius: 6px;
+}
+.ExportFile button:hover {
+    box-shadow: 0 12px 16px 0 rgba(182, 41, 128, 0.24), 0 17px 50px 0 rgba(209, 84, 151, 0.19);
+  }

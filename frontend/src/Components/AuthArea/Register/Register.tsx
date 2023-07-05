@@ -14,6 +14,7 @@ import {  NavLink, useNavigate } from "react-router-dom";
 import UserModel from "../../../Models/Users";
 import { useForm } from "react-hook-form";
 import AuthService from "../../../Services/AuthService";
+import notifyService from "../../../Services/NotifyService";
 
 function AuthMenu(): JSX.Element {
     
@@ -25,15 +26,12 @@ function AuthMenu(): JSX.Element {
 
         try {
             await AuthService.register(user);
-            // notifyService.success("Welcome!");
-            
-             alert("welcome!!!")
-      
+            notifyService.success("Welcome!");
             navigate("/vacations");
         }
         catch(err: any) {
-            // notifyService.error(err);
-            alert(err)
+            notifyService.error(err);
+            
         }
     }
     
@@ -112,6 +110,7 @@ const defaultTheme = createTheme();
                 type="email"
                 autoFocus
                 {...register("email",UserModel.emailValidation)}
+                
               /><span>{formState.errors.email?.message}</span>
               <TextField
                 margin="normal"
