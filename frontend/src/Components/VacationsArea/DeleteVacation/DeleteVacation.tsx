@@ -19,11 +19,7 @@ function DeleteVacation(): JSX.Element {
         notifyService.error(err)
       }
       
-        
       },[])
-        
-    
-
     return (
         <div className="DeleteVacation">
 			

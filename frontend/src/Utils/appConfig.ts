@@ -12,6 +12,7 @@ class Config {
    public followersNumber = "http://localhost:3001/api/followersNumber/"
    public getvacationForUser ="http://localhost:3001/api/getVacationsForUser/"
    public removefollowerUrl = "http://localhost:3001/api/removeFollower/"
+   public isFollowing = "http://localhost:3001/api/isFollowing/"
    }
    const appConfig = new Config()
    export default appConfig;

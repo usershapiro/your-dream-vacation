@@ -59,5 +59,21 @@ router.get("/followersForAllVacations",
         next(err);
     }
 });
+//isFollowing
+router.get("/isFollowing/:id/:vacationcode", async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    const id = parseInt(request.params.id);
+    const vacationCode = parseInt(request.params.vacationcode);
+
+    if (isNaN(id) || isNaN(vacationCode)) {
+      throw new Error("Invalid parameters");
+    }
+
+    const isFollowing = await followersLogic.isFollowing(id, vacationCode);
+    response.json(isFollowing[0]);
+  } catch (err) {
+    next(err);
+  }
+});
 
 export default router;

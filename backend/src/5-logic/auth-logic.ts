@@ -11,7 +11,7 @@ async function register(user: UserModel):Promise<string> {
 
     const error = user.validate();
     if(error) throw new ValidationError(error);
-    if (await isUsernameTaken(user.email)) throw new ValidationError(`Email ${user.email} is already taken`);
+    if (await isEmailTaken(user.email)) throw new ValidationError(`Email ${user.email} is already taken`);
    
     user.password = cyber.hash(user.password);
     user.role = "user"
@@ -42,7 +42,7 @@ async function login(credentials: CredentialsModel) : Promise<string>{
  
   const user = users[0];
   const token = cyber.getNewToken(user);
-  console.log(token)
+  
   return token;
 
 
@@ -50,11 +50,12 @@ async function login(credentials: CredentialsModel) : Promise<string>{
 
 }
 
-async function isUsernameTaken(email: string): Promise<boolean> {
+async function isEmailTaken(email: string): Promise<boolean> {
 
-    const sql = `SELECT COUNT (*) FROM users WHERE email =?`
-    const count = await dal.execute(sql,[email])[0];
-    return count> 0
+    const sql = `SELECT COUNT (*) AS count FROM users WHERE email =?`
+    const result = await dal.execute(sql, [email]);
+    const count = result[0].count;
+    return count > 0;
 }
 
 async function getOneUser(id: number):Promise<UserModel>{
@@ -71,6 +72,6 @@ async function getOneUser(id: number):Promise<UserModel>{
 export default {
     register,
     login,
-    isUsernameTaken,
+    isEmailTaken,
     getOneUser
 }

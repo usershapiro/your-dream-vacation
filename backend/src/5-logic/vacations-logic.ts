@@ -6,13 +6,7 @@ import { v4 as uuid } from "uuid"; // v4 function changed to uuid name.
 import path from "path";
 import fs from "fs"
 import fsPromises from "fs/promises"
-// SELECT vacationCode, destination,description,
-    //  DATE_FORMAT(startDate, '%d-%m-%Y') AS startDate,
-    //  DATE_FORMAT(endDate, '%d-%m-%Y') AS endDate,
-    //   price,
-    //   imageFile FROM vacations
-    //   ORDER BY startDate;
-    //   ;
+
 async function getAllVacations() {
     const sql = `
     
@@ -37,6 +31,7 @@ async function getVacationByCode(vacationCode : number):Promise<VacationsModel> 
      DATE_FORMAT(endDate, '%d-%m-%Y') AS endDate,
       price,
       imageFile
+      
    FROM vacations WHERE vacations.vacationCode = ? `;
    const vacations = await dal.execute(sql , [vacationCode])
    const vacation = vacations[0]
@@ -84,15 +79,8 @@ async function addVaction (vacation: VacationsModel):Promise<VacationsModel> {
 
 async function updateVacation (vacation: VacationsModel) :Promise<VacationsModel> {
    const errors = vacation.validate();
-   if(errors) throw new ValidationError(errors);
+   if(errors) throw new ValidationError(errors)
 
-    if(vacation.image){
-        const error = vacation.validate()
-
-        if (error) throw new ValidationError(error)
-    
-      
-        
         if (vacation.image) {
 
             deleteImage(vacation);
@@ -130,7 +118,7 @@ async function updateVacation (vacation: VacationsModel) :Promise<VacationsModel
     if(updateVacationInfo.length === 0) throw new ResourceNotFoundError(vacation.vacationCode)
     
     return vacation
-}  }
+}  
 
 
 

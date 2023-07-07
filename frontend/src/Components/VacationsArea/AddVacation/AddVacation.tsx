@@ -1,6 +1,5 @@
 import { Box, Button, TextField } from "@mui/material";
 import "./AddVacation.css";
-import { send } from "process";
 import { useForm } from "react-hook-form";
 import VacationsModel from "../../../Models/VacationModel";
 import vacationsService from "../../../Services/VactionsService";
@@ -78,7 +77,6 @@ function AddVacation(): JSX.Element {
       <div>
      
       <TextField
-          label="Start Date"
           variant="standard"
           color="secondary"
           type="date"
@@ -88,7 +86,6 @@ function AddVacation(): JSX.Element {
         <div>
      
       <TextField
-          label="End Date"
           variant="standard"
           color="secondary"
           type="date"
@@ -98,6 +95,7 @@ function AddVacation(): JSX.Element {
         <div>
      
      <TextField
+       label="price"
          variant="standard"
          color="secondary"
          type="number"

@@ -1,7 +1,7 @@
 import axios from "axios";
 import appConfig from "../Utils/appConfig";
 import VacationsModel from "../Models/VacationModel";
-import FollowerModel from "../Models/FollowerModel";
+
 
 
 

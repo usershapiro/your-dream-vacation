@@ -1,11 +1,7 @@
 
-.SearchArea {
-    /* display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    background-color: aliceblue; */
+.SearchArea .vacationcards{
     
+  
   }
   .SearchArea .container{
   display: flex;
@@ -14,7 +10,7 @@
   padding: 20px;
   background-color: aliceblue;
 }
-.SearchArea  h2{
+.SearchArea  h2 {
   font-size: larger;
   font-style: italic; 
  text-align: center;
@@ -29,25 +25,4 @@
   font-style: italic;
   font-size: x-large;
 }
-
-SearchArea {display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 20px; }
-  
-  SearchArea .vacationcards{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  padding: 20px; 
-  padding-top: 20px;
- }
-
- SearchArea .VacationCard {
-  width: calc(25% - 10px);
-  margin-bottom: 20px;
-}
-/* .VacationCard:last-child {
-  margin: 0 auto; 
-}  */
 

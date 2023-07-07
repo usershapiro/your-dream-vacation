@@ -45,8 +45,6 @@ function Home(): JSX.Element {
                 <Button color="secondary" variant="contained" size="large"  onClick={() => {
     navigate("/register")
   }}>Start Your Dream !</Button>
-  {/* <h3>Create an acount to register and start your dream! </h3>
-  <h4>Our  site provides uniqe vacations!</h4> */}
             </>}
         </div>
     );

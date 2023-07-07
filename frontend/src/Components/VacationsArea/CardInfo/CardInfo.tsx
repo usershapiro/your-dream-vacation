@@ -16,22 +16,20 @@ import notifyService from "../../../Services/NotifyService";
 function CardInfo(): JSX.Element {
     const params = useParams();
     const [user, setUser] = useState<UserModel>();
-    const [isFollowung,setisFollowing]=useState<boolean>();
+    const [Isfollower,setIsFollower] =useState<boolean>();
     const [vacation, setVacation] = useState<VacationsModel>();
-    const [ vacations ,setVacations ] = useState<VacationsModel[]>([]);
-    const [value, setValue] = React.useState<number | null>(3);
+    const [ vacationforUser ,setVacationforUser ] = useState<VacationsModel[]>([]);
     const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
-    const [hasAddedFollower, setHasAddedFollower] = useState(false);
     const [followersCount, setFollowersCount] = useState<number>();
-    const [checked, setChecked] = React.useState(true);
+    const [value, setValue] = useState<boolean>(Isfollower);
+    
+    
 
-    //getting the vacations
+    //getting the vacation
     useEffect(() => {
         const vacationCode = + params.vacationCode; // prodId must be same name as declared in the routing! 
         vacationsService.getVacationByCode(vacationCode)
-
             .then((vacation) => {setVacation(vacation)
-            
             })
             .catch(err => alert(err));
     }, []);
@@ -51,49 +49,53 @@ function CardInfo(): JSX.Element {
         };
     }, []);
 
+
  //getting followers number per vacation
     useEffect(() => {
       const vacationCode = + params.vacationCode;
       followerService.followersNumberPerVacation(vacationCode)
-          .then((followersCount) => setFollowersCount(followersCount))
+          .then((followersCount) => {setFollowersCount(followersCount)}
+          )
           .catch(err => notifyService.error(err));
-          console.log(vacations)
-  }, []);
- 
-  //adding follower
- async function addFollower(){
-  // if (checked) {
-    try {
-      // if (!hasAddedFollower) {
-        await followerService.addFollower(user.id, vacation.vacationCode);
-        setFollowersCount(followersCount + 1);
         
-        // setHasAddedFollower(true);
-      // }
-    } catch (err: any) {
-      alert(err.message);
-    }
-  
-  
+  }, []);
+  //checking if following
+useEffect(() => {
+  if(user&&user.id&&vacation&&vacation.vacationCode){
+    followerService.isFollowing(user.id,vacation.vacationCode)
+    .then((f) => {setIsFollower(f.isFollowing)
+   console.log(f)
+    })
+    .catch(err => notifyService.error(err));
   }
+}, [user,vacation]);
 
-  async function removeFollower() {
-    try {
-      //     // if (hasAddedFollower) {
-            await followerService.removeFollower(user.id, vacation.vacationCode);
-            setFollowersCount(followersCount - 1);
-          
-      
-      //       // setHasAddedFollower(false);
-      //     // }
-        } catch (err: any) {
-          notifyService.error(err)
-        }
+
+async function addFollower() {
+  try {
+    console.log("Adding follower");
+    await followerService.addFollower(user.id, vacation.vacationCode);
+    setFollowersCount(prevCount => prevCount + 1);
+    vacation.isFollowing = true;
+    setIsFollower(true);
+    console.log("Followers count:", followersCount + 1);
+  } catch (err: any) {
+    alert(err.message);
   }
+}
 
+async function removeFollower() {
+  try {
+    await followerService.removeFollower(user.id, vacation.vacationCode);
+    setFollowersCount(prevCount => prevCount - 1);
+    vacation.isFollowing = false;
+    setIsFollower(false);
+  } catch (err: any) {
+    notifyService.error(err);
+  }
+}
     return (
         <div className="CardInfo" >
-
          {vacation && 
          <>
          <div className="container">
@@ -109,28 +111,30 @@ function CardInfo(): JSX.Element {
         
      <CardContent className="info" > 
       <div>
-
-        
-      {user.role === "user" && (
+      {user.role === "user" &&Isfollower!==undefined&& (
   <>
-   <Checkbox 
-      onChange={(e) => {
+  <Checkbox 
+    onChange={(e) => {
+      if (e.target.checked !== value) {
         if (e.target.checked) {
           addFollower();
-        }
-        else{
+          setValue(true);
+        } else {
           removeFollower();
+          setValue(false);
         }
-      
-      }}
-      
-       color="secondary"{...label} 
-       sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
-       icon={<FavoriteBorder /> }
-       checkedIcon={<Favorite />}
-       />
-       <span>Like {followersCount}</span>
-  
+      }
+    }}
+    color="secondary"
+    {...label} 
+    sx={{ '& .MuiSvgIcon-root': { fontSize: 40 } }}
+    icon={<FavoriteBorder />}
+    checkedIcon={<Favorite />}
+    checked={Isfollower}
+  />
+ 
+<span>Like {followersCount}</span>
+
   </>
 )}
      
@@ -156,7 +160,7 @@ function CardInfo(): JSX.Element {
           <Typography variant="body2" color="text.secondary">
           <div className="price"></div>
            <Typography component="legend">Rating</Typography>
-      <Rating name="read-only" value={value} readOnly />
+      <Rating name="read-only" value={5} readOnly />
 
           </Typography>
         </CardContent>

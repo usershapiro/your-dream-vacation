@@ -1,3 +1,14 @@
-.UpdateVacation {
-	
+.UpdateVacation .img {
+	width: 350px;
+    height: 250px;
+    margin-left: 400px;
 }
+.UpdateVacation .Error{
+    position: relative;
+    left:0%;
+    color: #d32f2f;
+    font-family: Arial;
+    font-size: 0.75rem;
+    text-align: center;
+    padding: 1%;
+  }

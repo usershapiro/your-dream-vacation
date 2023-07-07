@@ -8,7 +8,6 @@ import appConfig from "./2-utils/appConfig";
 import usersController from "./6-controllers/users-controller";
 import authController from "./6-controllers/auth-controller";
 import fileUpload from "express-fileupload";
-import followersLogic from "./5-logic/followers-logic";
 import followersController from "./6-controllers/followers-controller";
 
 console.log("good luck!")

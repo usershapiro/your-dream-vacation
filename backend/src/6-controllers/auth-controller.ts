@@ -2,7 +2,7 @@ import express, { Request, Response,NextFunction } from "express";
 import UserModel from "../4-models/user-model";
 import authLogic from "../5-logic/auth-logic";
 import CredentialsModel from "../4-models/credentials-model";
-import blockNonLoggedIn from "../3-middleware/block-non-logged-in";
+
 
 const router = express.Router();
 

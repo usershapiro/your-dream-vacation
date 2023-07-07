@@ -4,6 +4,7 @@ import FollowerModel from "../4-models/followers-model";
 import { ResourceNotFoundError } from "../4-models/error-model";
 
 
+
 async function addFollwoer (id:number,vacationCode:number) :Promise<FollowerModel> {
         // const sql= `INSERT INTO followers VALUES (?, ?);`
        const sql =
@@ -15,7 +16,7 @@ async function addFollwoer (id:number,vacationCode:number) :Promise<FollowerMode
      
     
         const addedFollower = await dal.execute(sql,[id ,vacationCode]);
-        console.log(addedFollower)
+        
         return addedFollower
     
     }
@@ -40,17 +41,19 @@ async function getFollowersNumberPerVacation(vacationCode:number) :Promise<numbe
 }
 
 async function getFolowersNumbersForAllVacations() {
-    // const sql = ` SELECT vacationCode, COUNT(id) AS count FROM followers GROUP BY vacationCode;`;
     const sql = `SELECT v.vacationCode, v.destination, COUNT(f.id) AS count
     FROM followers f
     INNER JOIN vacations v ON f.vacationCode = v.vacationCode
     GROUP BY v.vacationCode, v.destination;`
     const followers = await dal.execute(sql);
-    console.log(followers)
     return followers;
 }
 
-
+async function isFollowing(id: number,vacationCode:number):Promise<FollowerModel> {
+    const sql= `SELECT EXISTS(SELECT * FROM followers WHERE id = ? AND vacationcode =?) AS isFollowing;`
+    const isFollowing= await dal.execute(sql,[id ,vacationCode])
+    return isFollowing
+}
 
 
 export default 
@@ -58,7 +61,8 @@ export default
     addFollwoer,
     getFollowersNumberPerVacation,
     removeFollower,
-    getFolowersNumbersForAllVacations
+    getFolowersNumbersForAllVacations, 
+    isFollowing
     
     
 };

@@ -33,6 +33,13 @@ class FollowerService {
     }
 
     
+    public async isFollowing(id:number,vacationCode:number) :Promise<FollowerModel> {
+        const response = await axios.get(`${appConfig.isFollowing}${id}/${vacationCode}`);
+
+        const isFollowing= response.data;
+        return isFollowing
+    }
+    
 }
 
 const followerService = new FollowerService();

@@ -19,6 +19,7 @@ function SearchArea(props: VacationSearchProps): JSX.Element {
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const navigate = useNavigate();
 
+//getting the user
   useEffect(() => {
     setUser(authStore.getState().user);
     const unsubscribe = authStore.subscribe(() => {
@@ -66,7 +67,10 @@ function SearchArea(props: VacationSearchProps): JSX.Element {
   async function FollowedVacations(): Promise<void> {
     try {
       const followedVacations = await vacationsService.getvacationForUser(user.id);
-      setFilterVacations(followedVacations);
+      // const filteredVacations = followedVacations.filter((v) => v.isFollowing === true);
+      const filteredVacations = followedVacations.filter((v) => Boolean(v.isFollowing) === true);
+      setFilterVacations(filteredVacations);
+      console.log("my favorite", filteredVacations);
       setIsButtonClicked(true);
     } catch (err) {
       notifyService.error(err);
@@ -80,7 +84,7 @@ function SearchArea(props: VacationSearchProps): JSX.Element {
       {isUser && (
             <Stack direction="row" spacing={2}>
             <Button size="small" color="secondary" onClick={FollowedVacations}>
-              My Vacations
+              My Favorite
             </Button>
             <Button size="small" color="secondary" onClick={CurrentVacations}>
               Current Vacations
@@ -99,15 +103,15 @@ function SearchArea(props: VacationSearchProps): JSX.Element {
           </Stack>
           )}
         
-        <Stack direction="row" spacing={2}>
+        
         <div className="vacationcards">  
           {filterVacations.map((v) => (
             <SearchCard   key={v.vacationCode} vacation={v}  />
           ))}
           </div>
-        </Stack>
+        
       </div>
-
+      
       {isButtonClicked && (
         <>
           <h1>You are welcome to explore all of our unique and beautiful vacations!</h1>

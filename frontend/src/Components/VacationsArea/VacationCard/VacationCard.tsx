@@ -40,6 +40,7 @@ function VacationCard(props: VacationCardProps): JSX.Element {
 
     </div>
   </CardActionArea>
+  
 </Card>
     </NavLink>  
 </div>

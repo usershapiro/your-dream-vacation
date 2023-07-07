@@ -4,8 +4,7 @@ class CredentialsModel {
 
     public static emailValidation={
         required: {value: true, message: "email required!"},
-        // RegExp: {RegExp:/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i, message:"email isn't valid"}
-        
+               
     }
 
 

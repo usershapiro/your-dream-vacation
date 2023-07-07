@@ -47,6 +47,7 @@ function UpdateVacation(): JSX.Element {
       }
   
       if (currentDate > endDate) {
+  
         const confirmed = window.confirm(
           "The selected end date is in the past. Are you sure you want to proceed?"
         );
@@ -55,7 +56,7 @@ function UpdateVacation(): JSX.Element {
         }
       }
         try {
-            
+     
             await vacationsService.update(vacation)
             notifyService.success("Vacation has been updated")          
             navigate("/vacations");
@@ -81,43 +82,45 @@ function UpdateVacation(): JSX.Element {
       <div>
      <input type="number" {...register("vacationCode")} hidden ></input>
       <TextField
-          label="Destination"
+          
           variant="standard"
           color="secondary" 
           {...register("destination",VacationsModel.destinationValidation)}
         />
-          <span className="Error">{formState.errors.destination?.message}</span>
+          <div className="Error">{formState.errors.destination?.message}</div>
 
         </div>
         <div>
           <TextField
-         label="Description"
+         
          variant="standard"
           color="secondary"
           type="text"
           {...register("description",VacationsModel.descriptionValidation)}
         />
-        <span className="Error">{formState.errors.description?.message}</span>
+        <div className="Error">{formState.errors.description?.message}</div>
       </div>
       <div>
      
       <TextField
-          label="Start Date"
+        
           variant="standard"
           color="secondary"
           type="date"
-          {...register("startDate")}
+          {...register("startDate", VacationsModel.startDateValidation)}
         />
         </div>
         <div>
-     
+        <div className="Error">{formState.errors.startDate?.message}</div>
       <TextField
-          label="End Date"
+         
           variant="standard"
           color="secondary"
           type="date"
-          {...register("endDate")}
+          {...register("endDate",VacationsModel.endDateValidation)}
+        
         />
+          <div className="Error">{formState.errors.endDate?.message}</div>
         </div>
         <div>
      
@@ -130,12 +133,13 @@ function UpdateVacation(): JSX.Element {
        <span className="Error">{formState.errors.price?.message}</span>
        </div>
        {vacation && vacation.imageFile!== null &&<>
-       <label>Image: </label>
-                {/* <img src={vacation && appConfig.vacationImageUrl + vacation?.imageFile}/> */}
+       
+                <img  className="img"   src={vacation && appConfig.vacationImageUrl + vacation?.imageFile}/>
                 <input type="file" accept="image/*"   {...register("image")} /></>}
 
        <Box sx={{ '& button': { m: 1 } }}>
-      
+  
+       {/* <span className="Error">{formState.errors.image?.message}</span> */}
       <div>
         
         <Button variant="contained" size="medium"  color="secondary" type="submit">
